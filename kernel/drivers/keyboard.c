@@ -18,6 +18,12 @@ KeyState KEYSTATE;
 
 char scancode_to_ascii(scancode_t scancode) {
     bool shift = KEYSTATE.ShiftL || KEYSTATE.ShiftR; // Is either Left Shift or Right Shift pressed
+    
+    //If im being completely honest, I am not entirely sure if this is necessary, but I added it just in case.
+    if (scancode > 128) {
+        return  '\0';
+    }
+    
     // If shift is pressed and CapsLock isn't, and vice versa
     if (KEYSTATE.CapsLock ^ shift)
         return ScASCII_UPPER[(uint8_t) scancode];
@@ -52,11 +58,12 @@ scancode_t ps2_kb_wfi() {
     }
     scancode = inb(KEYBOARD_DATA_PORT);
 
-    // Key release?
-    if (scancode & 0x80)
-        return 0;
-    
     process_keypress(scancode);
+
+    // Key release?
+    if (scancode & 0x80) {
+        return 0;
+    }
 
     return scancode;
 }

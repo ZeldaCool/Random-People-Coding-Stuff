@@ -57,14 +57,24 @@ void move_tcursor(int x, int y) {
 
 void putchar(char c, uint8_t COLOR) {
 	if (c == 0) return;
-	if (c == '\n') {
+	if (c == '\n') { // Handle newlines
 		terminal_column = 0;
 		terminal_row++;
-		if (terminal_row == VGA_TEXT_HEIGHT)
-			vga_scroll(COLOR);
 	}
-	else if (c == '\t') {
+	else if (c == '\t') { // Handle the tab key
 		for (int j = 0; j < 4; j++) putchar(' ', COLOR);
+	}
+	else if (c == '\b') { // Should backspace be implented in the VGA driver? Probably not, but I did it anyway. - MorganPG1
+		// Handle backspace being used across lines
+		if (terminal_column == 0 && terminal_row != 0) {
+			terminal_row--;
+			terminal_column = VGA_TEXT_WIDTH-1;
+		} else if (terminal_column != 0){
+			terminal_column--;
+		}
+
+		// Erase last character
+		putentryat(' ', COLOR, terminal_column, terminal_row);
 	}
 	else {
 		putentryat(c, COLOR, terminal_column, terminal_row);
@@ -74,15 +84,16 @@ void putchar(char c, uint8_t COLOR) {
 		terminal_column = 0;
 		terminal_row++; // MorganPG - Fix implementation for wrapping onto a new line
 	}
-	if (terminal_row == VGA_TEXT_HEIGHT)
-		terminal_row = 0;
-
+	if (terminal_row == VGA_TEXT_HEIGHT) {
+			vga_scroll(COLOR);
+	}
 	move_tcursor(terminal_column, terminal_row);
 }
 
 void write(char* data, size_t size, uint8_t COLOR) {
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size; i++) {
 		putchar(data[i], COLOR);
+	}
 }
 
 // just an alias

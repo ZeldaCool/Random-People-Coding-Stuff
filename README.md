@@ -20,7 +20,8 @@ If you contribute at all in any way to the project, please add your name to the 
 
 ## TO-DO
 - Create a command system
-- Implement shell (First fix printing and typing bugs. Line wraps act weird and backspace and shift are broken)
+- Implement shell
+- Implement shell navigation via arrow keys
 - Remove Profanity
 
 ## Needed Jobs
@@ -68,6 +69,7 @@ There are 2 commands you can use for this:
 ## Contact (If you want to be a point of contact email me and then you can add your email here)
 elroylilly@gmail.com for any questions
 
+Also, you can join the community slack [here](https://join.slack.com/t/communtiyos/shared_invite/zt-3t3iltj77-5JTo~dkpCm44tZcyA0Or_w)
 ## Pictures
 
 <img width="1920" height="1080" alt="theosbooted" src="https://github.com/user-attachments/assets/498e0981-27eb-4e7d-a306-26bc7ed75c6f" />
