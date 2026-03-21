@@ -1,12 +1,87 @@
 #include "vga.h"
+#include "../ports.h"
+#include <stdint.h>
+#include <stddef.h>
 
-int puts(char* str) // totally not stolen from crystal, lol
-{
-	volatile char* pVgaTextBuff = 0xB8000;
-	for (str; *str != 0; str++ )
-        {
-        	pVgaTextBuff[0] = *str;
-        	pVgaTextBuff[1] = 0x0f; //color atrib
-        	pVgaTextBuff += 2;
-        }
+uint8_t TERMINAL_COLOR;
+
+size_t terminal_row = 0;
+size_t terminal_column = 0;
+
+void putentryat(char c, uint8_t color, size_t x, size_t y) {
+	size_t index = y * VGA_TEXT_WIDTH + x;
+	((uint16_t*)VGA_TEXT_ADDR)[index] = vga_entry(c, color);
 }
+
+uint8_t vga_entry_color(enum VGA_COLOR fg, enum VGA_COLOR bg) {
+	return fg | bg << 4;
+}
+
+// I'm tired of commenting. - bonk enjoyer (dorito girl)
+
+uint16_t vga_entry(unsigned char c, uint8_t color) {
+	return (uint16_t) c | (uint16_t) color << 8;
+}
+
+void vga_clear(uint8_t color) {
+	uint16_t off = 0;
+	while (off < VGA_TEXT_WIDTH * VGA_TEXT_HEIGHT) {
+		((uint16_t*)VGA_TEXT_ADDR)[off] = vga_entry(' ', color);
+		off++;
+	}
+}
+
+void move_tcursor(int x, int y) {
+	uint16_t pos = y * VGA_TEXT_WIDTH + x;
+
+	outb(0x3D4, 0xF);
+	outb(0x3d5, (uint8_t) (pos & 0xFF));
+	outb(0x3d4, 0xE);
+	outb(0x3d5, (uint8_t) ((pos >> 8) & 0xFF));
+}
+
+void putchar(char c, uint8_t COLOR) {
+	if (c == 0) return;
+	if (c == '\n') {
+		terminal_column = 0;
+		terminal_row++;
+		if (terminal_row == VGA_TEXT_HEIGHT) {
+			// do (almost) nothing, for now.
+			terminal_row--;
+			// TODO: add scrolling
+		}
+	}
+	else if (c == '\t') {
+		for (int j = 0; j < 4; j++) putchar(' ', COLOR);
+	}
+	else {
+		putentryat(c, COLOR, terminal_column, terminal_row);
+		terminal_column++;
+	}
+	if (terminal_column == VGA_TEXT_WIDTH) {
+		terminal_column = 0;
+		terminal_row = 0;
+	}
+	if (terminal_row == VGA_TEXT_HEIGHT)
+		terminal_row = 0;
+
+	move_tcursor(terminal_column, terminal_row);
+}
+
+void write(char* data, size_t size, uint8_t COLOR) {
+	for (int i = 0; i < size; i++)
+		putchar(data[i], COLOR);
+}
+
+// just an alias
+void printf(char* data, uint8_t COLOR) {
+	for (size_t i = 0; data[i]; i++) {
+		putchar(data[i], COLOR);
+	}
+}
+
+void set_termcolor(enum VGA_COLOR FG, enum VGA_COLOR BG) {
+	TERMINAL_COLOR = vga_entry_color(FG, BG);
+}
+
+
