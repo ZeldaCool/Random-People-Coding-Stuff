@@ -8,7 +8,7 @@ void _entry()
     uint8_t term_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLUE);
     vga_clear(term_color);
     //vga_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
-    printf("----- COMMUNITYOS V0.1 -----\n", term_color);
+    printf("----- COMMUNITY OS v0.1 -----\n", term_color);
     printf("Built by random people on the internet.\n", term_color);
     
     // input loop for testing
