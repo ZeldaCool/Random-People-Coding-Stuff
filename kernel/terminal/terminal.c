@@ -96,12 +96,17 @@ void input(unsigned char* buff, size_t buffer_size, uint8_t color) {
     //saved_input[0] = '\0';
 
     while (true) {
+        // Wait for scancode
         scancode_t sc = ps2_kb_wfi();
 
         if (sc & 0x80) continue;
         if (sc == 0) continue;
 
+        // If up or down arrow is pressed
         if (sc == KEY_UP || sc == KEY_DOWN) {
+
+            // If up is pressed and the browse index is 0
+            // then copy the input buffer into saved_input
             if (sc == KEY_UP && browse_idx == 0) {
                 size_t k;
                 for (k = 0; k < buff_count; k++) {
@@ -110,10 +115,11 @@ void input(unsigned char* buff, size_t buffer_size, uint8_t color) {
                 saved_input[k] = '\0';
             }
 
+            // Handle increasing and decreasing the browse index
             if (sc == KEY_UP   && browse_idx < history_count) browse_idx++;
             if (sc == KEY_DOWN && browse_idx > 0)             browse_idx--;
 
-            // Pick the string to show: restored current input or a history slot.
+            // Pick the string to show: restore saved input or a history slot.
             unsigned char* src;
             if (browse_idx == 0) {
                 src = saved_input;
@@ -121,30 +127,37 @@ void input(unsigned char* buff, size_t buffer_size, uint8_t color) {
                 int slot = (history_head - browse_idx + HISTORY_SIZE) % HISTORY_SIZE;
                 src = history_entries[slot];
             }
-
+            
+            // Clear the line in the framebuffer
             for (size_t k = 0; k < terminal_column-start_x; k++) {
                 size_t col = (start_x + k) % VGA_TEXT_WIDTH;
                 size_t row = start_y + (start_x + k) / VGA_TEXT_WIDTH;
                 putentryat(' ', color, col, row);
             }
+
             // Reset software and hardware cursor back to start of input.
             terminal_column = start_x;
             terminal_row    = start_y;
             move_tcursor(start_x, start_y);
 
+            // Move the string to show into the framebuffer
             size_t k;
             for (k = 0; src[k] && k < buffer_size - 1; k++) {
                 buff[k] = src[k];
                 putchar(src[k], color);
             }
+
+            // Null terminate the buffer
             buff_count = k;
             buff[buff_count] = '\0';
             continue;
         }
         unsigned char ascii = scancode_to_ascii(sc);
     
+        // Exit input if enter is pressed
         if (ascii == '\n') break;
 
+        // Handle backspace
         if (ascii == '\b') {
             if (buff_count > 0) {
                 if (terminal_column > 0) {
@@ -164,6 +177,8 @@ void input(unsigned char* buff, size_t buffer_size, uint8_t color) {
             }
             continue;
         }
+
+        // Display the character entered and place it in the input buffer
         if (buff_count < buffer_size - 1 && ascii >= 0x20) {
             buff[buff_count] = ascii;
             
@@ -172,8 +187,9 @@ void input(unsigned char* buff, size_t buffer_size, uint8_t color) {
         }
     }
 
+    // Null terminate the buffer
     buff[buff_count] = '\0';
 
-    // Ember2819: arrow recal
+    // Ember2819: arrow recall
     history_push(buff);
 }
