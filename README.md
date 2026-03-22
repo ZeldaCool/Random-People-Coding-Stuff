@@ -4,6 +4,8 @@ We want to have a ton of random people come together and make their own individu
 
 ## How to Contribute:
 There are several ways you can contribute:
+- Give us ideas for the name and logo [here](https://forms.gle/33wz1AsVEKife6pB8)
+- Give us feedback [here](https://forms.gle/3aL4FJqvc8MZaJJv5)
 - Fix a typo or add better wording
 - Improve documentation
 - Add a new feature
@@ -66,8 +68,9 @@ There are 2 commands you can use for this:
 
 # Other details
 
-## Contact (If you want to be a point of contact email me and then you can add your email here)
+## Contact
 elroylilly@gmail.com for any questions
+If you want a pre-built Image email us
 
 Also, you can join the community slack [here](https://join.slack.com/t/communtiyos/shared_invite/zt-3t3iltj77-5JTo~dkpCm44tZcyA0Or_w)
 ## Pictures

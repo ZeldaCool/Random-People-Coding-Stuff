@@ -22,6 +22,10 @@
   header h1 { font-size: 1.1rem; margin: 0; }
   header h2 { font-size: 0.85rem; margin: 0; }
   header div { padding: 8px 0; }
+  code {background-color: black; color: #F5F5F5; border-radius: 6px; overflow-x: auto; font-family: monospace;}
+  summary { list-style: none; cursor: pointer;}
+  summary::-webkit-details-marker {display: none;}
+  summary {cursor: pointer;}
   </style>
 </head>
 <body>
@@ -52,18 +56,22 @@
 <p><a class="redirect" href="downloads.html" rel="noopener noreferrer" >Downloads</a></p>
 </h2>
 
+<h2>
+<p><a class="redirect" href="Q&A.html" rel="noopener noreferrer" >Q&A Page</a></p>
+</h2>
+
+
 </div>
 <hr>
 </header> 
 <h2>Roadmap</h2>
   
   <p style="margin-left: 20px;">
-1. Complete bootloader and create proper Makefile and linker.ld to place the kernel at 0x1000
-<br>2. Create Drivers
-<br>3. Create A Bootable OS
-<br>4. Create Memory Managment
-<br>5. Create Shell
-<br>6. Create A File System
+  <br>1. Dynamic Memory Management
+  <br>2. Shell With a basic command system
+  <br>3. Storage management/Filesystem
+  <br>4. Internet Access
+  <br>5. Package ManagerFirst Official Release
 </p>
 
 </body>

@@ -60,27 +60,61 @@
 <p><a class="redirect" href="Q&A.html" rel="noopener noreferrer" >Q&A Page</a></p>
 </h2>
 
-            </div>
-            <hr />
-        </header>
+</div>
+<hr>
+</header>
 
-        <h2>Credits</h2>
+<h2>Q&A</h2>
 
-        <p style="margin-left: 40px">
-            <strong>Ember2819 (founder and manager)</strong>, 
-            <br /><strong>Sifi11 (founder)</strong>, 
-            <br /><strong>bonk enjoyer / dorito girl (bootloader creator, absolute legend),</strong>
-            <br />WilliamMMM / billythemoon (V1.0 website creator), 
-            <br />Crim(OG), 
-            <br />CheeseFunnel23, 
-            <br />KaleidoscopeOld5841 (uses arch BTW), 
-            <br />TheGirl790, 
-            <br />kotofyt, 
-            <br />xtn59, 
-            <br />c-bass,
-            <br />EastConsequence3792, 
-            <br />MorganPG1, 
-            <br />Zorx555
-        </p>
-    </body>
+<p>(Click the Questions to Expand Answers)</p>
+
+<details>
+  <summary><h3 style=display: inline;>Q:How do I compile and run this project?</h3></summary>
+  <p>
+  <b>
+  NOTE: THESE INSTRUCTIONS ARE TARGETING LINUX BASED SYSTEMS, IF YOU DON'T USE LINUX THEN INSTALL LINUX ON A VIRTUAL MACHINE TO FOLLOW THESE
+  </b>
+  </p>
+  <p>
+  A:<i> Step 1 - Installing the required build tools</i>
+  </p>
+  <p>I am using Ubuntu for this guide, the following command will install the required tools on any Ubuntu based distro.
+  <code>sudo apt install build-essential binutils nasm clang qemu-system-x86</code>
+  </p>
+  <p>
+  This installs:
+  </p>
+  
+  <p style="margin-left: 40px;">
+NASM (for assembling the bootloader)
+<br>LD (the GNU linker for linking the code into one image)
+<br>Clang (for compiling the C code)
+<br>GCC (backup compiler, same use as Clang)
+<br>Make (for automating all the commands needed)
+<br>QEMU (emulator, for testing the OS)
+</p>
+  
+  <p>
+  If you are not using an Ubuntu based distro then use any equivalent command for your distro's package manager, these tools should be easily available for all distros.
+  </p>
+  
+  <p>
+  <i>Step 2 - Building the OS</i>
+  </p>
+  
+  <p>
+  This process will work on any Linux distro as long as you have the previously stated dependencies installed. There are 2 commands you can use for this:
+  </p>
+  
+  
+  
+    <p style="margin-left: 40px;">
+<code>make all</code> - This produces an os.img file
+<br><code>make run</code> - This produces an os.img file as well, but it also runs the img file in qemu so you can test it out.
+</p>
+  
+</details>
+
+
+</body>
 </html>
