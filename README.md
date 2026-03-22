@@ -75,7 +75,8 @@ If you want a pre-built Image email us
 Also, you can join the community slack [here](https://join.slack.com/t/communtiyos/shared_invite/zt-3t3iltj77-5JTo~dkpCm44tZcyA0Or_w)
 ## Pictures
 
-<img width="1920" height="1080" alt="theosbooted" src="https://github.com/user-attachments/assets/498e0981-27eb-4e7d-a306-26bc7ed75c6f" />
+<img width="719" height="458" alt="image" src="https://github.com/user-attachments/assets/4955f87a-e402-4e17-91e9-24f6fdab67d3" />
+
 
 ## Contributors: 
 - **Ember2819** (Founder & Manager)
