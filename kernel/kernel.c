@@ -6,7 +6,7 @@
 #include "commands.h" // Included by Ember2819: Adds commands
 #include "colors.h" // Added by MorganPG1 to centralise colors into one file
 // Ember2819: Add command functionality
-void process_input(char *buffer) {
+void process_input(unsigned char *buffer) {
     run_command(buffer, TERM_COLOR);
 }
 
