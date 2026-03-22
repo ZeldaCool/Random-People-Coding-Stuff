@@ -26,8 +26,8 @@ static void cmd_help(uint8_t color) {
     printf("test   - placeholder\n", color);
     printf("contributors - Displays names of all contributors\n", color);
     printf("setkeyswe - Sets keyboard layout to Swedish QWERTY\n", color); // Zorx555 - Keyboard layout commands
-    printf("setkeyus - Sets keyboard layout to US QWERTY", color);
-    printf("setkeyuk", color); // MorganPG1 - Add UK Keyboard layout
+    printf("setkeyus - Sets keyboard layout to US QWERTY\n", color);
+    printf("setkeyuk - Sets keyboard layout to UK QWERTY", color); // MorganPG1 - Add UK Keyboard layout
 }
 
 static void cmd_hello(uint8_t color) {
