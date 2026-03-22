@@ -4,10 +4,22 @@
 #include "mem.h"
 #include "terminal/terminal.h"
 
+
+void process_input(char *buffer) {
+    uint8_t input_display_color = vga_entry_color(VGA_COLOR_GREEN, VGA_COLOR_BLUE);
+
+    //This is where you would process the user input, my placeholder implementation just prints it out
+    printf("\nReceived input\n", input_display_color);
+    printf(buffer, input_display_color);
+    
+}
+
+__attribute__((section(".text.entry"))) // Add section attribute so linker knows this should be at the start
 void _entry()
 {
     uint8_t term_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLUE);
     vga_clear(term_color);
+
     //vga_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
     printf("----- COMMUNITY OS v0.1 -----\n", term_color);
     printf("Built by random people on the internet.\n", term_color);
@@ -33,13 +45,20 @@ void _entry()
 
     set_layout(DOWNCASE, UPPERCASE);
 
-    char buff[512];
+    
+    while (1) {    // Temporary loop so the code doesn't halt after one line
+        char buff[512];
+        input(buff, 512, term_color);
 
-    input(buff, 512, vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_GREEN));
+        process_input(buff);
 
+        //Adds a new line and then restarts the loop
+        putchar('\n', term_color);
+    }
     /* Hangs forever */
     //for (;;) {}
 
     // ^ do NOT do that. it will use too much of the CPU. do this instead
     asm volatile ("hlt");
 }
+

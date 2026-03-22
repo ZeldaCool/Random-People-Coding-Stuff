@@ -11,8 +11,6 @@ void putchar(char c, uint8_t color) {
 	if (c == '\n') {
 		terminal_column = 0;
 		terminal_row++;
-		if (terminal_row == VGA_TEXT_HEIGHT)
-			vga_scroll(color);
 	}
 	else if (c == '\t') {
 		for (int j = 0; j < 4; j++) putchar(' ', color);
@@ -21,12 +19,13 @@ void putchar(char c, uint8_t color) {
 		putentryat(c, color, terminal_column, terminal_row);
 		terminal_column++;
 	}
-	if (terminal_column >= VGA_TEXT_WIDTH) {
+	if (terminal_column == VGA_TEXT_WIDTH) {
 		terminal_column = 0;
 		terminal_row++; // MorganPG - Fix implementation for wrapping onto a new line
 	}
 	if (terminal_row == VGA_TEXT_HEIGHT) {
         vga_scroll(color);
+        terminal_column = 0;
         terminal_row = VGA_TEXT_HEIGHT - 1;
     }
 	move_tcursor(terminal_column, terminal_row);
@@ -59,7 +58,7 @@ void vga_scroll(uint8_t color) {
 
 
 void input(char* buff, size_t buffer_size, uint8_t color) {
-    size_t buff_count;
+    size_t buff_count = 0; //Initialise the buffer count
     
     size_t x = terminal_column;
     size_t y = terminal_row;
@@ -75,39 +74,36 @@ void input(char* buff, size_t buffer_size, uint8_t color) {
 
         if (ascii == '\b') {
             if (buff_count > 0) {
-                if (x > 0) x--;
-                else if (y > 0) {
+                if (x > 0) {
+                    x--;
+                }
+                else if (y > 0) { //Handle deleting characters on the row above
                     x = VGA_TEXT_WIDTH - 1;
                     y--;
                 }
+
+                // Delete the character
                 putentryat(' ', color, x, y);
                 buff_count--;
-
+                buff[buff_count] = 0;
+                
+                // Update cursor
                 terminal_column = x;
                 terminal_row = y;
-
-                buff[buff_count] = 0;
                 move_tcursor(x, y);
             }
             continue;
         }
         // If buffer is big enough, and ASCII is printable
-        if (buff_count < buffer_size - 1 && ascii >= 0x20 && ascii != 0x80) {
+        if (buff_count < buffer_size - 1 && ascii >= 0x20) {
             buff[buff_count] = ascii;
-            x++;
-            if (x >= VGA_TEXT_WIDTH) {
-                if (y < VGA_TEXT_HEIGHT - 1)
-                    y++;
-                else vga_scroll(color);
-                x = 0;
-            }
+            
             putchar(ascii, color);
 
             y = terminal_row;
             x = terminal_column;
             buff_count++;
         }
-        move_tcursor(terminal_column, terminal_row);
     }
 
     buff[buff_count] = '\0';
