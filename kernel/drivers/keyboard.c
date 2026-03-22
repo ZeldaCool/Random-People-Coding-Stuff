@@ -49,6 +49,18 @@ scancode_t ps2_kb_wfi() {
     }
     scancode = inb(KEYBOARD_DATA_PORT);
     
+    // Ember2819: arrow key history
+    if (scancode == 0xE0) {
+        while (!(inb(KEYBOARD_STATUS_PORT) & 1)) {
+            asm volatile("pause");
+        }
+        scancode_t ext = inb(KEYBOARD_DATA_PORT);
+        if (ext & 0x80) return 0;        // ignore extended key releases
+        if (ext == 0x48) return KEY_UP;
+        if (ext == 0x50) return KEY_DOWN;
+        return 0;
+    }
+
     process_keypress(scancode);
 
     return scancode;
