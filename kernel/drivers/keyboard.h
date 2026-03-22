@@ -21,6 +21,10 @@
 #define BACKSPACE_SC 0xE
 #define ENTER_SC 0x1C
 
+// Ember2819: arrow keys for command history
+#define KEY_UP   0x60
+#define KEY_DOWN 0x61
+
 typedef struct {
     bool ShiftL;        // Is Left Shift pressed?
     bool ShiftR;        // Is Right Shift pressed?
