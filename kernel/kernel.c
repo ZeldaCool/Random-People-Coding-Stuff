@@ -3,15 +3,11 @@
 #include "drivers/keyboard.h"
 #include "mem.h"
 #include "terminal/terminal.h"
+#include "commands.h" // Included by Ember2819: Adds commands
 
-
+// Ember2819: Add command functionality
 void process_input(char *buffer) {
-    uint8_t input_display_color = vga_entry_color(VGA_COLOR_GREEN, VGA_COLOR_BLUE);
-
-    //This is where you would process the user input, my placeholder implementation just prints it out
-    printf("\nReceived input\n", input_display_color);
-    printf(buffer, input_display_color);
-    
+    run_command(buffer, vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLUE));
 }
 
 __attribute__((section(".text.entry"))) // Add section attribute so linker knows this should be at the start
@@ -19,14 +15,11 @@ void _entry()
 {
     uint8_t term_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLUE);
     vga_clear(term_color);
-
     //vga_set_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
-    printf("----- COMMUNITY OS v0.1 -----\n", term_color);
+    printf("----- COMMUNITY OS v0.4 -----\n", term_color);
     printf("Built by random people on the internet.\n", term_color);
     
     // input loop for testing
-
-
     // AMERICAN US QWERTY KEYBOARD
     char DOWNCASE[128] = {
         0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b', '\t',
@@ -42,9 +35,7 @@ void _entry()
         'Z','X','C','V','B','N','M','<','>','?', 0, '*', 0, ' '
         // Rest unprintable
     };
-
     set_layout(DOWNCASE, UPPERCASE);
-
     
     while (1) {    // Temporary loop so the code doesn't halt after one line
         uint8_t prompt_color = vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLUE);
@@ -52,16 +43,10 @@ void _entry()
         
         char buff[512];
         input(buff, 512, term_color);
-
         process_input(buff);
-
         //Adds a new line and then restarts the loop
         putchar('\n', term_color);
     }
-    /* Hangs forever */
-    //for (;;) {}
 
-    // ^ do NOT do that. it will use too much of the CPU. do this instead
     asm volatile ("hlt");
 }
-
