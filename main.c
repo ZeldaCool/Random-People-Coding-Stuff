@@ -15,7 +15,7 @@
 // We share only a single file but we need multiple things to run the stuff
 // Rename this file to kernel.c
 // Copy over the file names, their contents and run make
-
+//random
 /* boot.s:
 ;
 ; bonk enjoyer (dorito girl)
