@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include "../ports.h"
+#include "../layouts/kb_layouts.h"
 #include <stdbool.h>
 
 #define PS2_KB_BUFF_SIZE 512
@@ -42,7 +43,7 @@ void process_keypress(scancode_t sc);
 // Wait For Input
 scancode_t ps2_kb_wfi();
 // Set Layout
-void set_layout(unsigned char* DOWNCASE, unsigned char* UPPERCASE);
+void set_layout(KeyboardLayout layout);
 
 
 

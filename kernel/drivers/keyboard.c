@@ -3,8 +3,8 @@
 // PS/2 keyboard driver
 
 #include "keyboard.h"
+#include "../layouts/kb_layouts.h"
 #include "../ports.h"
-
 // Layout map by scancodes.
 // Add layout via set_layout()
 char ScASCII[128];
@@ -60,7 +60,10 @@ void ps2_kb_init() {
 
 // Im getting tired of writing these dumb comments that nobody reads.
 
-void set_layout(unsigned char* DOWNCASE, unsigned char* UPPERCASE) {
-    for (int j = 0; j < 128; j++) ScASCII[j] = DOWNCASE[j];
-    for (int j = 0; j < 128; j++) ScASCII_UPPER[j] = UPPERCASE[j];
+void set_layout(KeyboardLayout layout) {
+    char* lowercase = layout.lower;
+    char* uppercase = layout.upper;
+
+    for (int j = 0; j < 128; j++) ScASCII[j] = lowercase[j];
+    for (int j = 0; j < 128; j++) ScASCII_UPPER[j] = uppercase[j];
 }

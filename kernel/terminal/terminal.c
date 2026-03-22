@@ -6,33 +6,42 @@ uint16_t terminal_column = 0;
 uint16_t terminal_row = 0;
 
 void putchar(char c, uint8_t color) {
-	if (c == 0) return;
+	if (c == 0) {
+        return; // Don't print null characters
+    }
 	if (c == '\n') {
 		terminal_column = 0;
 		terminal_row++;
 	}
 	else if (c == '\t') {
-		for (int j = 0; j < 4; j++) putchar(' ', color);
+		for (int j = 0; j < 4; j++) { 
+            putchar(' ', color); // Print 4 spaces when tab is pressed
+        }
 	}
 	else {
-		putentryat(c, color, terminal_column, terminal_row);
+		putentryat(c, color, terminal_column, terminal_row); // Display the character if it is standard ASCII
 		terminal_column++;
 	}
+
+    // Wrapping and scrolling
 	if (terminal_column == VGA_TEXT_WIDTH) {
 		terminal_column = 0;
-		terminal_row++; // MorganPG - Fix implementation for wrapping onto a new line
+		terminal_row++; // MorganPG1 - Fix implementation for wrapping onto a new line
 	}
 	if (terminal_row == VGA_TEXT_HEIGHT) {
         vga_scroll(color);
         terminal_column = 0;
         terminal_row = VGA_TEXT_HEIGHT - 1;
     }
+
+    // Update VGA Cursor
 	move_tcursor(terminal_column, terminal_row);
 }
 
 void write(char* data, size_t size, uint8_t COLOR) {
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < size; i++) {
 		putchar(data[i], COLOR);
+    }
 }
 
 // just an alias

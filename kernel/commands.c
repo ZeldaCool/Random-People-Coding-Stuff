@@ -1,7 +1,7 @@
 #include "commands.h"
 #include "colors.h"
 #include "drivers/keyboard.h"
-#include "layouts/layouts.h"
+#include "layouts/kb_layouts.h"
 #include "terminal/terminal.h"
 
 
@@ -55,12 +55,12 @@ static void cmd_contributors(uint8_t color) {
 }
 
 static void cmd_setkeyswe(uint8_t color) {
-    set_layout(SWEDISHDOWNCASE, SWEDISHUPPERCASE);
+    set_layout(LAYOUTS[1]); // Changed to work with my layout system
     printf("\nKeyboard layout set to Swedish QWERTY", color);
 }
 
 static void cmd_setkeyus(uint8_t color) {
-    set_layout(USDOWNCASE, USUPPERCASE);
+    set_layout(LAYOUTS[0]); // Changed to work with my layout system
     printf("\nKeyboard layout set to US QWERTY", color);
 }
 
