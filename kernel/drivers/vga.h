@@ -30,14 +30,6 @@ enum VGA_COLOR {
   VGA_COLOR_YELLOW = 0x2C
 };
 
-void putchar(char c, uint8_t COLOR);
-
-void write(char* data, size_t size, uint8_t COLOR);
-
-void printf(char* data, uint8_t COLOR);
-
-int puts(char* str, uint8_t color);
-
 uint8_t vga_entry_color(enum VGA_COLOR fg, enum VGA_COLOR bg);
 
 uint16_t vga_entry(unsigned char c, uint8_t color);
@@ -45,5 +37,7 @@ uint16_t vga_entry(unsigned char c, uint8_t color);
 void move_tcursor(int x, int y);
 
 void vga_clear(uint8_t color);
+
+void putentryat(char c, uint8_t color, size_t x, size_t y);
 
 #endif
