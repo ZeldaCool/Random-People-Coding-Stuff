@@ -85,11 +85,12 @@ Also, you can join the community slack [here](https://join.slack.com/t/communtiy
 - CheeseFunnel23 (was cooking RIP)
 - **bonk enjoyer/dorito girl** (Bootloader Creator) **ABSOLUTE LEGEND**
 - KaleidoscopeOld5841 (Uses Arch BTW)
-- billythemoon (main website creator)
+- billythemoon (V1 Website creator)
 - TheGirl790 (OG)
 - kotofyt
 - xtn59
 - c-bass
 - u/EastConsequence3792
-- MorganPG1 (added build instructions to readme)
+- MorganPG1
 - Zorx555
+- mckaylap2304 (V2 Website creator)

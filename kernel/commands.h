@@ -12,7 +12,6 @@ typedef struct {
 
 static void cmd_help(uint8_t color);
 static void cmd_hello(uint8_t color);
-static void cmd_test(uint8_t color);
 static void cmd_contributors(uint8_t color);
 static void cmd_setkeyswe(uint8_t color);
 static void cmd_setkeyus(uint8_t color);
