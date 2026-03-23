@@ -1,7 +1,7 @@
 ;
 ; bonk enjoyer (dorito girl)
 ;
-; Organize the kernel at 0x1000 for this to work properly
+; Organize the kernel at 0x8000 for this to work properly
 ;
 ; Created, because grub will probably be too complex for the "owner" of this repo
 ;
@@ -58,9 +58,9 @@ boot_2:
 
 	mov	si, 0x0
 	mov	es, si
-	mov	ebx, 0x1000		;; Destination = 0x0:0x1000
+	mov	bx, 0x8000		;; Destination = 0x0:0x1000
 
-	mov	al, 0x20		;; SECTOR COUNT
+	mov	al, 0x42		;; SECTOR COUNT
 	mov	ch, 0x0			;; CYLINDER
 	mov	cl, 0x2			;; SECTOR (STARTS WITH 1)
 	mov	dh, 0x0			;; HEAD
@@ -213,8 +213,8 @@ protected_mode_exec:
 	mov	fs, ax
 	mov	gs, ax
 
-	jmp	0x1000		;; Finally, jumping to the kernel
-
+	jmp	0x8000		;; Finally, jumping to the kernel
+	;;hlt
 times 510 - ($ - $$) db 0
 
 ;; Boot signature

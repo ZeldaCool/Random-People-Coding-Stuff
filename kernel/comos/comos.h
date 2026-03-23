@@ -16,8 +16,8 @@ static inline void comos_print(const char* s) { fputs(s, stdout); }
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "../colors.h"
 void printf(char* data, uint8_t color);
-#define TERM_COLOR 0x0F
 static inline void comos_print(const char* s) { printf((char*)s, TERM_COLOR); }
 #endif
 
