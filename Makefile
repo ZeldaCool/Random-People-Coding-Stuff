@@ -13,7 +13,7 @@ TRUNC_AMNT = 360448
 # Objcopy (to translate elf to bin)
 OBJCOPY = objcopy
 OBJCOPY_ARGS = -O binary
-CC_FLAGS = -m32 -ffreestanding -nostdlib -fno-builtin -fno-stack-protector -c
+CC_FLAGS = -m32 -ffreestanding -nostdlib -fno-builtin -fno-stack-protector -g -c
 AS_FLAGS = -f bin
 LD_FLAGS = -m elf_i386 -T linker.ld
 KERNEL_OBJECTS = kernel/kernel.o kernel/ports.o kernel/mem.o
@@ -67,7 +67,7 @@ os.img: bootloader/boot.bin kernel.bin
 	cat bootloader/boot.bin kernel.bin > os.img
 # Launch the image in QEMU
 run: os.img
-	qemu-system-i386 -drive format=raw,file=os.img
+	qemu-system-i386 -s -drive format=raw,file=os.img
 clean:
 	rm -f $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(MISC_OBJECTS) kernel.elf kernel.bin bootloader/boot.bin
 .PHONY: all run clean

@@ -80,7 +80,7 @@ static void cmd_clear(uint8_t color) {
 }
 
 static void cmd_version(uint8_t color) {
-    printf("\nCommunity OS v0.5\n", color);
+    printf("\nCommunity OS v1.0\n", color);
 }
 
 //Ember2819,COMOS language 
@@ -89,7 +89,7 @@ static ComosState comos_state;
 static void cmd_comos(uint8_t color) {
     // Demo program -- runs until FAT32 lets us load .comos files from disk
     static const char* demo =
-        "print(\"CommunityOS scripting language (.comos)\")\n"
+        "print(\"\nCommunityOS scripting language (.comos)\")\n"
         "def fib(n):\n"
         "    if n <= 1:\n"
         "        return n\n"
