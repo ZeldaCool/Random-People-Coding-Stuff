@@ -22,6 +22,7 @@ static Command commands[] = {
     { "setkeyuk", cmd_setkeyuk},
     { "clear", cmd_clear },
     { "version", cmd_version },
+    { "chars", cmd_chars },
     { "comos", cmd_comos },
     { "init_tables", cmd_init_gdtidt },
     { "send_intr", cmd_send_intr },
@@ -41,6 +42,7 @@ static void cmd_help(uint8_t color) {
     printf("setkeyuk - Set the keyboard layout to UK QWERTY\n\n", color); // MorganPG1 - Add UK Keyboard layout
     printf("clear - Clear the screen\n\n", color); //ember
     printf("version - Show the current version of the operating system\n\n", color); // TheOtterMonarch - Output version of the OS
+    printf("chars - Print the available characters\n\n", color);
     printf("comos - Run the .comos scripting language\n\n", color);
     printf("init_tables - Inits descriptor tables\n", color); // Pumpkicks - Inits the descriptor tables
     printf("send_intr - Sends an interruption\n", color); // Pumpkicks - Sends the interruption 0x3
@@ -69,6 +71,7 @@ static void cmd_contributors(uint8_t color) {
     printf("Zorx555\n", color);
     printf("mckaylap2304\n", color);
     printf("TheOtterMonarch\n", color);
+    printf("codecrafter01001\n", color);
     printf("Pumpkicks\n", color);
 }
 
@@ -93,6 +96,19 @@ static void cmd_clear(uint8_t color) {
 
 static void cmd_version(uint8_t color) {
     printf("\nCommunity OS v1.0\nUsing Community OS Bootloader 1.0\n", color);
+}
+
+static void cmd_chars(uint8_t color) {
+    printf("\n\n", color);
+    for (int i = 0; i < 256; i++) {
+        char c = i;
+        putchar(c, color);
+        printf(" ", color);
+        if ((i+1)%16 == 0) {
+            printf("\n", color);
+        }
+    }
+    printf("\n", color);
 }
 
 //Ember2819,COMOS language 
