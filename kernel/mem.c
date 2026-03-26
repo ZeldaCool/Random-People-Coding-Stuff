@@ -1,5 +1,3 @@
-#include "comos/comos.h"
-#include "terminal/terminal.h"
 #include <stdint.h>
 void* memcpy(void* dest, const void* src, unsigned long n) {
     // n = Number of bytes
@@ -41,7 +39,7 @@ void* malloc(unsigned long size) {
     if ((heap_ptr + size) > __bss_end) {
         return 0;
     }
-    void* p = (void*)(&__bss_start)[heap_ptr];
+    void* p = (void*)(uintptr_t)(&__bss_start)[heap_ptr];
     heap_ptr += size;
     return p;
 }
