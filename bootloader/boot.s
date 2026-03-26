@@ -58,9 +58,9 @@ boot_2:
 
 	mov	si, 0x0
 	mov	es, si
-	mov	bx, 0x8000		;; Destination = 0x0:0x1000
+	mov	bx, 0x8000		;; Destination = 0x0:0x8000
 
-	mov	al, 0x42		;; SECTOR COUNT
+	mov	al, 0x80		;; SECTOR COUNT
 	mov	ch, 0x0			;; CYLINDER
 	mov	cl, 0x2			;; SECTOR (STARTS WITH 1)
 	mov	dh, 0x0			;; HEAD
@@ -214,6 +214,8 @@ protected_mode_exec:
 	mov	gs, ax
 
 	jmp	0x8000		;; Finally, jumping to the kernel ;; Why 0x8000 instead of 0x1000?
+	;; Project is so large now the OS overwrites the bootloader if its loaded at 0x1000
+
 	;;hlt
 times 510 - ($ - $$) db 0
 
