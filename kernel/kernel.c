@@ -5,6 +5,7 @@
 #include "drivers/tables/timer/timer.h"
 #include "drivers/vga.h"
 #include "drivers/keyboard.h"
+#include "drivers/drives.h"
 #include "layouts/kb_layouts.h"
 #include "terminal/terminal.h"
 #include "commands.h" // Included by Ember2819: Adds commands
@@ -39,6 +40,8 @@ void _entry() {
     printf("Testing interruption...\n", VGA_COLOR_LIGHT_GREY);
     asm volatile("int $0x3");
     printf("Test completed!\n", VGA_COLOR_LIGHT_GREY);
+
+    drives_init();
     kmain(); // _entry will be the initialization
 }
 
