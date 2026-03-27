@@ -49,6 +49,7 @@ static void kmain()
 {
     // malloc(938); Idk if it works tbh
     // outb(0x64, 0xfe); // Reboots the machine? (It acts weird in QEMU, but it reboots at least)
+    get_kdrive(0);
 
     while (1) {    // Shell loop
         // Prints shell prompt

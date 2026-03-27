@@ -20,7 +20,8 @@ DRIVER_OBJECTS = kernel/drivers/vga.o kernel/drivers/keyboard.o kernel/drivers/t
 MISC_OBJECTS = kernel/colors.o kernel/terminal/terminal.o kernel/commands.o kernel/layouts/kb_layouts.o \
                kernel/comos/comos_lexer.o kernel/comos/comos_parser.o kernel/comos/comos_interp.o # ADDED
 # Ember2819
-FS_OBJECTS = kernel/drivers/drives.o kernel/drivers/ata.o kernel/fs/fat16.o
+FS_OBJECTS = kernel/drivers/drives.o kernel/drivers/ata.o \
+	kernel/fs/fs.o kernel/fs/fat16.o
 
 # Builds the final disk image
 all: os.img
@@ -58,8 +59,9 @@ os.img: bootloader/boot.bin kernel.bin
 run: os.img
 	qemu-system-i386 -s -drive format=raw,file=os.img -usb
 
+
 fat16.img:
-	dd if=/dev/zero of=fat16.img bs=512 count=8192
+	dd if=/dev/zero of=fat16.img bs=1M count=16
 	mkfs.fat -F 16 -n "GECKOOS" fat16.img
 	@echo "fat16.img created. Copy files onto it with:"
 	@echo "  mcopy -i fat16.img yourfile.txt ::yourfile.txt"
