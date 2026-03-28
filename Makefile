@@ -7,13 +7,13 @@ AS = nasm
 LD = ld
 # Truncate (to make the kernel.bin divisible by 512)
 TRUNCATE = truncate
-TRUNC_AMNT = 360448
+TRUNC_AMNT = 131072
 # Objcopy (to translate elf to bin)
 OBJCOPY = objcopy
 OBJCOPY_ARGS = -O binary
 CC_FLAGS = -m32 -ffreestanding -nostdlib -fno-builtin -fno-stack-protector -g -c
 AS_FLAGS = -f bin
-LD_FLAGS = -m elf_i386 -T linker.ld
+LD_FLAGS = -m elf_i386
 KERNEL_OBJECTS = kernel/kernel.o kernel/mem.o
 DRIVER_OBJECTS = kernel/drivers/vga.o kernel/drivers/keyboard.o kernel/drivers/tables/idt/idt_c.o kernel/drivers/tables/idt/idt_s.o \
 	kernel/drivers/tables/isr/isr_c.o kernel/drivers/tables/isr/isr_s.o kernel/drivers/tables/irq/irq_c.o kernel/drivers/tables/irq/irq_s.o kernel/drivers/tables/timer/timer.o
@@ -30,8 +30,17 @@ all: os.img
 %.o: %.c
 	$(CC) $(CC_FLAGS) $< -o $@
 # Assemble the bootloader
-bootloader/boot.bin: bootloader/boot.s
+bootloader/boot.bin: bootloader/boot.s bootloader/bootc.bin
 	$(AS) $(AS_FLAGS) $< -o $@
+	cat bootloader/bootc.bin >> $@
+	$(TRUNCATE) -s 8192 bootloader/boot.bin
+bootloader/bootc.o: bootloader/boot.c
+	$(CC) $(CC_FLAGS) $< -o $@
+
+bootloader/bootc.elf: bootloader/bootc.o
+	$(LD) $(LD_FLAGS) -T bootloader/linker.ld $< -o $@ 
+bootloader/bootc.bin: bootloader/bootc.elf
+	$(OBJCOPY) $(OBJCOPY_ARGS) $< $@
 
 # IDT IRQ IRQ
 kernel/drivers/tables/idt/idt_c.o: kernel/drivers/tables/idt/idt.c
@@ -49,7 +58,7 @@ kernel/drivers/tables/isr/isr_s.o: kernel/drivers/tables/isr/isr.s
 
 # Link all kernel objects 
 kernel.elf: $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(MISC_OBJECTS) $(FS_OBJECTS)
-	$(LD) $(LD_FLAGS) $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(MISC_OBJECTS) $(FS_OBJECTS) -o kernel.elf
+	$(LD) $(LD_FLAGS) -T linker.ld $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(MISC_OBJECTS) $(FS_OBJECTS) -o kernel.elf
 kernel.bin: kernel.elf
 	$(OBJCOPY) $(OBJCOPY_ARGS) kernel.elf kernel.bin
 	$(TRUNCATE) -s $(TRUNC_AMNT) kernel.bin
@@ -72,6 +81,6 @@ run-fat16: os.img fat16.img
 	  -drive format=raw,file=fat16.img \
 	  -usb
 clean:
-	rm -f $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(MISC_OBJECTS) $(FS_OBJECTS) kernel.elf kernel.bin bootloader/boot.bin
+	rm -f $(KERNEL_OBJECTS) $(DRIVER_OBJECTS) $(MISC_OBJECTS) $(FS_OBJECTS) kernel.elf kernel.bin bootloader/bootc.elf bootloader/bootc.bin bootloader/boot.bin
 	rm -f fat16.img
 .PHONY: all run run-fat16 clean
