@@ -61,6 +61,9 @@ scancode_t ps2_kb_wfi() {
         if (ext & 0x80) return 0;        // ignore extended key releases
         if (ext == 0x48) return KEY_UP;
         if (ext == 0x50) return KEY_DOWN;
+        // ember2819: left/right arrows for editor
+        if (ext == 0x4B) return KEY_LEFT;
+        if (ext == 0x4D) return KEY_RIGHT;
         return 0;
     }
 
@@ -74,6 +77,7 @@ void ps2_kb_init() {
 }
 
 // Im getting tired of writing these dumb comments that nobody reads.
+// I read them...
 
 void set_layout(KeyboardLayout layout) {
     unsigned char* lowercase = layout.lower;
