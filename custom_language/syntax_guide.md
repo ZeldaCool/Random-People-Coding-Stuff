@@ -1,12 +1,22 @@
-# COMOS Syntax Guide
+# GeckoOS Syntax Guide
 
 By Ember2819
 
-A simple, python-like programming language designed to run on Community OS.
+A simple, python-like programming language designed to run on GeckoOS.
 
-Files are created with the .comos extension.
+Files are created with the `.gk` extension.
 
-The abosolute max is around 350 lines.
+Run a script from the shell with:
+```
+gk yourprogram.gk
+```
+
+Or run the interactive demo with just:
+```
+gk
+```
+
+The absolute max is around 350 lines.
 
 I promise I didn't just copy Python...
 
@@ -98,13 +108,13 @@ Text enclosed in single or double quotes. Both work.
  
 ```
 a = "this is"
-b = 'hard
+b = 'hard'
 ```
  
 Escape sequences inside strings:
  
 | Sequence | Meaning         |
-|----------|-----------------|
+|----------|-----------------| 
 | `\n`     | newline         |
 | `\t`     | tab             |
 | `\\`     | literal `\`     |
@@ -216,9 +226,9 @@ t = 'single quotes work too'
 ### Concatenation
  
 ```
-first = "Community"
+first = "Gecko"
 second = "OS"
-full = first + second   # "CommunityOS"
+full = first + second   # "GeckoOS"
 ```
  
 ### Printing strings
@@ -360,7 +370,7 @@ def greet(name):
 ### Calling a function
  
 ```
-greet("Silas")
+greet("Sifi11")
 ```
  
 ### Return values
@@ -391,7 +401,7 @@ print(power(2, 8))   # 256
  
 ### Scope
  
-Variables created inside a function are local to that function. Variables defined outside a funciton cannot be directly modified from inside a function.
+Variables created inside a function are local to that function. Variables defined outside a function cannot be directly modified from inside a function.
  
 ```
 def example():
@@ -426,32 +436,49 @@ for i in range(10):
 ```
  
 `range` is only valid as the iterable in a `for` statement. It cannot be stored in a variable or passed to a function.
+
+### input
+
+Reads a line of text typed by the user. Optionally prints a prompt first.
+Returns the typed text as a string.
+
+```
+name = input("Enter your name: ")
+print("Hello, " + name)
+```
+
+```
+x = input()   # no prompt, just waits for input
+print("You typed: " + x)
+```
+
+`input()` always returns a string. To use the result as a number, you would need to implement your own conversion logic.
  
 ---
  
 ## Limits
  
-These limits exist becuase it uses a static array instead of heap allocation.
+These limits exist because it uses a static array instead of heap allocation.
  
-| Limit                        | Value |
-|------------------------------|-------|
-| Max tokens per file          | 2048  |
-| Max AST nodes                | 2048  |
-| Max variables in scope       | 128   |
-| Max function definitions     | 64    |
-| Max parameters per function  | 8     |
-| Max call depth               | 32    |
-| Max string length            | 256   |
+| Limit                        | Value      |
+|------------------------------|------------|
+| Max tokens per file          | 2048       |
+| Max AST nodes                | 2048       |
+| Max variables in scope       | 128        |
+| Max function definitions     | 64         |
+| Max parameters per function  | 8          |
+| Max call depth               | 32         |
+| Max string length            | 256        |
 | Max source file size         | 8192 bytes |
-| Max statements per block     | 64    |
+| Max statements per block     | 64         |
  
 ---
  
 ## Full example
  
 ```
-name = "CommunityOS"
-print("Hello from " + name)
+name = input("What is your name? ")
+print("Hello from GeckoOS, " + name)
 
 for i in range(5):
     print(i)
