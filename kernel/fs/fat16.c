@@ -1,5 +1,3 @@
-//Ember2819
-
 #include "fat16.h"
 #include "../drivers/ata.h"
 #include "../mem.h"
@@ -652,4 +650,117 @@ struct drive_fs_t *fat16_drive_open( struct kdrive_t *drive, struct partition_t 
 struct drive_fs_t *fat16_drive_close( struct drive_fs_t *fs )
 {
 
+}
+
+int fat16_delete_file(struct drive_fs_t *fs, char *name) {
+    if (!fs) return -1;
+    FAT16_Volume   *pvol  = (FAT16_Volume *)fs->userdata1;
+    struct kdrive_t *drive = fs->drive;
+
+    uint32_t root_dir_sectors = ((uint32_t)pvol->bpb.root_entry_count * 32
+        + pvol->bpb.bytes_per_sector - 1) / pvol->bpb.bytes_per_sector;
+
+    uint8_t *root_buf = kmalloc(root_dir_sectors * drive->sector_size);
+    if (drive->read((void*)drive, pvol->root_dir_lba, root_dir_sectors, root_buf) < 0)
+        return -1;
+
+    // Build target 8.3 name for comparison
+    uint8_t target8[8], target3[3];
+    encode_83_name(name, target8, target3);
+
+    uint32_t total_entries = root_dir_sectors * (drive->sector_size / 32);
+    for (uint32_t i = 0; i < total_entries; i++) {
+        FAT16_DirEntry *e = (FAT16_DirEntry *)root_buf + i;
+        if (e->name[0] == FAT16_ENTRY_END)  break;   // no more entries
+        if (e->name[0] == FAT16_ENTRY_FREE) continue; // already deleted
+        if (e->attributes & FAT16_ATTR_VOLUME_ID) continue;
+
+        int match = 1;
+        for (int k = 0; k < 8; k++) if (e->name[k] != target8[k]) { match = 0; break; }
+        if (match) for (int k = 0; k < 3; k++) if (e->ext[k] != target3[k]) { match = 0; break; }
+
+        if (match) {
+            e->name[0] = FAT16_ENTRY_FREE;
+            drive->write((void*)drive, pvol->root_dir_lba, root_dir_sectors, root_buf);
+            return 0;
+        }
+    }
+    return -1;
+}
+
+//ember2819
+int fat16_append_file(struct drive_fs_t *fs, char *name,
+                      const uint8_t *content, size_t len) {
+    if (!fs) return -1;
+
+    // Try to read existing content first
+    static uint8_t appbuf[4096];
+    int total = 0;
+
+    struct fs_entries_t entries = fs->get_entries((void*)fs);
+    int found = -1;
+    for (int i = 0; i < (int)entries.count; i++) {
+        if (entries.entries[i].type != ENTRY_FILE) continue;
+        const char *a = entries.entries[i].file.name;
+        const char *b = name;
+        int match = 1;
+        while (*a && *b) {
+            char ca = (*a >= 'a' && *a <= 'z') ? *a - 32 : *a;
+            char cb = (*b >= 'a' && *b <= 'z') ? *b - 32 : *b;
+            if (ca != cb) { match = 0; break; }
+            a++; b++;
+        }
+        if (match && *a == '\0' && *b == '\0') { found = i; break; }
+    }
+
+    if (found >= 0) {
+        int chunk, j = 0;
+        while (total < 4000) {
+            uint8_t tmp[128];
+            chunk = entries.entries[found].file.read(
+                (void*)&entries.entries[found].file, j * 128, 128, tmp);
+            if (chunk <= 0) break;
+            for (int k = 0; k < chunk && total < 4000; k++)
+                appbuf[total++] = tmp[k];
+            j++;
+        }
+        fat16_delete_file(fs, name);
+    }
+
+    // Append new content
+    for (size_t i = 0; i < len && total < 4095; i++)
+        appbuf[total++] = content[i];
+
+    return fat16_create_file(fs, name, appbuf, (size_t)total);
+}
+
+//ember2819
+int fat16_mkdir(struct drive_fs_t *fs, char *name) {
+    if (!fs) return -1;
+    FAT16_Volume   *pvol  = (FAT16_Volume *)fs->userdata1;
+    struct kdrive_t *drive = fs->drive;
+
+    uint32_t root_dir_sectors = ((uint32_t)pvol->bpb.root_entry_count * 32
+        + pvol->bpb.bytes_per_sector - 1) / pvol->bpb.bytes_per_sector;
+
+    uint8_t *root_buf = kmalloc(root_dir_sectors * drive->sector_size);
+    if (drive->read((void*)drive, pvol->root_dir_lba, root_dir_sectors, root_buf) < 0)
+        return -1;
+
+    uint32_t total_entries = root_dir_sectors * (drive->sector_size / 32);
+    for (uint32_t i = 0; i < total_entries; i++) {
+        FAT16_DirEntry *e = (FAT16_DirEntry *)root_buf + i;
+        if (e->name[0] == FAT16_ENTRY_FREE || e->name[0] == FAT16_ENTRY_END) {
+            // Found a free slot – build a minimal directory entry
+            memset(e, 0, sizeof(FAT16_DirEntry));
+            encode_83_name(name, e->name, e->ext);
+            e->attributes   = FAT16_ATTR_DIRECTORY;
+            e->first_cluster = 0;  // no cluster allocated yet
+            e->file_size     = 0;
+            e->write_date    = (uint16_t)((44 << 9) | (1 << 5) | 1);
+            drive->write((void*)drive, pvol->root_dir_lba, root_dir_sectors, root_buf);
+            return 0;
+        }
+    }
+    return -1;  // root directory full
 }
