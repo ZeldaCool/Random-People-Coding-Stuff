@@ -2,21 +2,32 @@
 #include "tss.h"
 #include "../gdt/gdt.h"
 
-tss_t tss;
+tss_entry_t tss;
 
-void tss_gate() {
-    const uintptr_t tss_base = (uintptr_t)&tss;
-    const uintptr_t tss_limit = sizeof(tss) - 1;
+void tss_write(uint32_t idx, uint16_t ss0, uint32_t esp0) {
+    // Base and limit of the TSS struct itself
+    uint32_t base  = (uint32_t)&tss;
+    uint32_t limit = base + sizeof(tss_entry_t);
 
-    // TSS - low
-    gdt_entries[5].limit_low    = tss_limit;                                      // Limit (15:0)
-    gdt_entries[5].base_middle  = (uint16_t)tss_base;                             // Base (15:0)
-    gdt_entries[5].flags1   = (uint16_t)(0xE900 + ((tss_base >> 16) & 0xFF)); // P + DPL 3 + TSS + base (23:16)
-    gdt_entries[5].flags2   = (uint16_t)((tss_base >> 16) & 0xFF00);          // Base (31:24)
+    // Install a TSS descriptor into GDT slot `idx`
+    gdt_set_gate(idx, base, limit, 0xE9, 0x00);
+    // 0xE9 = Present | DPL=3 | 32-bit TSS (available)
 
-    // TSS - high
-    gdt_entries[6].limit    = (uint16_t)(tss_base >> 32);                     // Base (47:32)
-    gdt_entries[6].base     = (uint16_t)(tss_base >> 48);                     // Base (63:32)
-    gdt_entries[6].flags1   = 0x0000;
-    gdt_entries[6].flags2   = 0x0000;
+    // Zero the TSS, then fill the fields we actually need
+    uint8_t *p = (uint8_t *)&tss;
+    for (uint32_t i = 0; i < sizeof(tss_entry_t); i++) p[i] = 0;
+
+    tss.ss0  = ss0;   // kernel data segment selector (0x10)
+    tss.esp0 = esp0;  // kernel stack pointer — call tss_set_kernel_stack() to update
+    tss.cs   = 0x0b;  // ring-3 code  (0x08 | 0x03)
+    tss.ss   = 0x13;  // ring-3 stack (0x10 | 0x03)
+    tss.ds   = 0x13;
+    tss.es   = 0x13;
+    tss.fs   = 0x13;
+    tss.gs   = 0x13;
+}
+
+// Call this every time the kernel stack changes (e.g. before entering user mode)
+void tss_set_kernel_stack(uint32_t stack) {
+    tss.esp0 = stack;
 }
