@@ -27,7 +27,7 @@ extern void gdt_flush(uint32_t);
 void init_gdt();
 void gdt_set_gate(int32_t,uint32_t,uint32_t,uint8_t,uint8_t);
 
-extern gdt_entry_t gdt_entries[];
+extern gdt_entry_t gdt_entries[6];
 extern gdt_ptr_t   gdt_ptr;
 
 #endif
