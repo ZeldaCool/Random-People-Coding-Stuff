@@ -171,7 +171,7 @@ void input(unsigned char* buff, size_t buffer_size, uint8_t color) {
             buff[buff_count] = '\0';
             continue;
         }
-        unsigned char ascii = LAYOUTS[0].lower[sc];
+        unsigned char ascii = scancode_to_ascii(sc);
     
         // Exit input if enter is pressed
         if (ascii == '\n') break;
