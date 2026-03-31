@@ -3,6 +3,7 @@
 
 #include "../drivers/keyboard.h"
 #include "../drivers/vga.h"
+#include "../drivers/tables/isr/isr.h"
 
 #define HISTORY_SIZE 10
 static unsigned char history_entries[HISTORY_SIZE][512];
@@ -22,6 +23,7 @@ void kprintf( int severity, char* data, ...);
 void print(char* data);
 void print_int(int n);
 void print_hex(uint32_t n);
+void print_reg(registers_t reg);
 
 void vga_scroll(uint8_t color);
 

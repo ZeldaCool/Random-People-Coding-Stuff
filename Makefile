@@ -19,7 +19,7 @@ DRIVER_OBJECTS = kernel/drivers/vga.o kernel/drivers/keyboard.o kernel/drivers/t
 	kernel/drivers/tables/isr/isr_c.o kernel/drivers/tables/isr/isr_s.o kernel/drivers/tables/irq/irq_c.o kernel/drivers/tables/irq/irq_s.o kernel/drivers/tables/timer/timer.o
 MISC_OBJECTS = kernel/colors.o kernel/terminal/terminal.o kernel/commands.o kernel/layouts/kb_layouts.o \
                kernel/gk/gk_lexer.o kernel/gk/gk_parser.o kernel/gk/gk_interp.o \
-               kernel/editor/editor.o \
+               kernel/editor/editor.o kernel/drivers/tables/gdt/gdt_c.o kernel/drivers/tables/gdt/gdt_s.o \
                kernel/users/users.o #ember2819 user/permission system
 # Ember2819
 FS_OBJECTS = kernel/drivers/drives.o kernel/drivers/ata.o \
@@ -33,14 +33,14 @@ all: os.img
 	$(CC) $(CC_FLAGS) $< -o $@
 # Assemble the bootloader
 bootloader/boot.bin: bootloader/boot.s bootloader/bootc.bin
-	$(AS) $(AS_FLAGS) $< -o $@
+	$(AS) $< -o $@
 	cat bootloader/bootc.bin >> $@
 	$(TRUNCATE) -s 8192 bootloader/boot.bin
 bootloader/bootc.o: bootloader/boot.c
 	$(CC) $(CC_FLAGS) $< -o $@
 
 bootloader/bootc.elf: bootloader/bootc.o
-	$(LD) $(LD_FLAGS) -T bootloader/linker.ld $< -o $@ 
+	$(LD) $(LD_FLAGS) -T linker.ld $< -o $@ 
 bootloader/bootc.bin: bootloader/bootc.elf
 	$(OBJCOPY) $(OBJCOPY_ARGS) $< $@
 
@@ -51,11 +51,15 @@ kernel/drivers/tables/isr/isr_c.o: kernel/drivers/tables/isr/isr.c
 	$(CC) $(CC_FLAGS) $< -o $@
 kernel/drivers/tables/irq/irq_c.o: kernel/drivers/tables/irq/irq.c
 	$(CC) $(CC_FLAGS) $< -o $@
+kernel/drivers/tables/gdt/gdt_c.o: kernel/drivers/tables/gdt/gdt.c
+	$(CC) $(CC_FLAGS) $< -o $@
 kernel/drivers/tables/idt/idt_s.o: kernel/drivers/tables/idt/idt.s
 	$(AS) -felf32 $< -o $@
 kernel/drivers/tables/irq/irq_s.o: kernel/drivers/tables/irq/irq.s
 	$(AS) -felf32 $< -o $@
 kernel/drivers/tables/isr/isr_s.o: kernel/drivers/tables/isr/isr.s
+	$(AS) -felf32 $< -o $@
+kernel/drivers/tables/gdt/gdt_s.o: kernel/drivers/tables/gdt/gdt.s
 	$(AS) -felf32 $< -o $@
 
 # Link all kernel objects 

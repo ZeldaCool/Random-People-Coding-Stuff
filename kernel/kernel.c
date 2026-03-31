@@ -2,16 +2,21 @@
 #include "drivers/tables/idt/idt.h"
 #include "drivers/tables/idt/idt.h"
 #include "drivers/tables/irq/irq.h"
+#include "drivers/tables/isr/isr.h"
 #include "drivers/tables/timer/timer.h"
 #include "drivers/vga.h"
 #include "drivers/keyboard.h"
-#include "drivers/drives.h"
+#include "drivers/drives.h" // clangd mark this as an error
 #include "layouts/kb_layouts.h"
 #include "terminal/terminal.h"
 #include "commands.h"       // Included by Ember2819: Adds commands
 #include "colors.h"         // Added by MorganPG1 to centralise colors into one file
 #include "users/users.h"    // ember2819: user & permission system
+#include "drivers/tables/gdt/gdt.h"
 #include <stdint.h>
+
+#define PSE_BIT 0x00000010
+#define PG_BIT  0x80000000
 
 void process_input(unsigned char *buffer) {
     run_command(buffer, TERM_COLOR);
@@ -32,19 +37,31 @@ void _entry() {
     // Setup keyboard layouts
     set_layout(LAYOUTS[0]);
 
-    printc("Enabling IDT...\n", VGA_COLOR_LIGHT_GREY);
+    init_gdt();
     init_idt();
-    printc("Enabling IRQ...\n", VGA_COLOR_LIGHT_GREY);
     irq_install();
-    printc("Enabling Timer and setting it to 50Hz...\n", VGA_COLOR_LIGHT_GREY);
     timer_install();
     timer_phase(50);
-    printc("Testing interruption...\n", VGA_COLOR_LIGHT_GREY);
+
+    // 4mb pages
+
+    // asm volatile("movl  %%cr4, %%ecx" : : : "cr4", "ecx");
+    // asm volatile("orl   %%ecx, %0" : : "r"(PSE_BIT) : "ecx");
+    // asm volatile("movl  %%ecx, %%cr4" : : : "ecx", "cr4");
+
+    register int cr4 asm("cr4") = cr4 | PSE_BIT;
+
     asm volatile("int $0x3");
-    printc("Test completed!\n", VGA_COLOR_LIGHT_GREY);
+
+    // pg bit for paging
+
+    // asm volatile("movl  %%cr0, %%ecx" : : : "cr0", "ecx");
+    // asm volatile("orl   %%ecx, %0" : : "r"(PG_BIT) : "ecx");
+    // asm volatile("movl  %%ecx, %%cr0" : : : "ecx", "cr0");
+
+    register int cr0 asm("cr0") = cr0 | PG_BIT;
 
     drives_init();
-
     users_init();
     printc("User system initialised. Default accounts: root / guest\n", VGA_COLOR_LIGHT_GREY);
 

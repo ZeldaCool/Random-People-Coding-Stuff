@@ -513,7 +513,7 @@ static void cmd_write(uint8_t color) {
 
 static void cmd_uptime(uint8_t color) {
     uint32_t ticks = get_tick();
-    uint32_t seconds = ticks / 50; // timer is set to 50 Hz in kernel.c
+    uint32_t seconds = ticks / actual_hz; // timer is set to 50 Hz in kernel.c
     uint32_t minutes = seconds / 60;
     uint32_t hours   = minutes / 60;
     seconds %= 60;
