@@ -20,6 +20,7 @@ DRIVER_OBJECTS = kernel/drivers/vga.o kernel/drivers/keyboard.o kernel/drivers/t
 MISC_OBJECTS = kernel/colors.o kernel/terminal/terminal.o kernel/commands.o kernel/layouts/kb_layouts.o \
                kernel/gk/gk_lexer.o kernel/gk/gk_parser.o kernel/gk/gk_interp.o \
                kernel/editor/editor.o kernel/drivers/tables/gdt/gdt_c.o kernel/drivers/tables/gdt/gdt_s.o \
+               kernel/drivers/tables/tss/tss.o kernel/paging/paging.o \
                kernel/users/users.o #ember2819 user/permission system
 # Ember2819
 FS_OBJECTS = kernel/drivers/drives.o kernel/drivers/ata.o \
