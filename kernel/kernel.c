@@ -26,9 +26,6 @@ static void kmain();
 
 __attribute__((section(".text.entry")))
 void _entry() {
-
-    kalloc_init();
-
     // Initialise display
     vga_clear(TERM_COLOR);
     printc("----- GeckoOS v1.1 -----\n", TERM_COLOR);

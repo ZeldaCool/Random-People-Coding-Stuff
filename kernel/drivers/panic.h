@@ -4,7 +4,7 @@
 #include "../terminal/terminal.h"
 
 static inline void PANIC(char* str) {
-
+    
     while (1) HALT();
 }
 
