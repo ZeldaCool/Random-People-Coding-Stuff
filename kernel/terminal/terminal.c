@@ -1,7 +1,7 @@
 #include "../drivers/keyboard.h"
 #include "../drivers/vga.h"
-#include "../mem.h"
 #include "terminal.h"
+#include "../drivers/tables/isr/isr.h"
 #include "../gk/gk.h"
 #include <stdint.h>
 
@@ -251,4 +251,12 @@ void print_hex(uint32_t n)
         putchar( tmp+'0', VGA_COLOR_WHITE);
     }
 
+}
+void print_reg(registers_t reg) {
+    print("--- Register ---\n");
+    print("Int no: "); print_int(reg.int_no); print("\n");
+    print("Err no: "); print_int(reg.err_code); print("\n");
+    print("Segments: CS: "); print_int(reg.cs); print("SS: "); print_int(reg.ss); print("DS: "); print_int(reg.ds);
+    // CONTINUE
+    print("---__________---\n");
 }

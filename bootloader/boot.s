@@ -10,6 +10,19 @@
 org 0x7c00
 bits 16
 
+ALIGNVAR    equ 1<<0
+MEMINFO     equ 1<<1
+FLAGS       equ ALIGNVAR | MEMINFO
+MAGIC       equ 0x1BADB002
+CHECKSUM    equ -(MAGIC + FLAGS)
+
+section .multiboot.data
+
+align 4
+
+section .bootstrap_stack
+
+section .multiboot.text
 _start:
 ; load few more sectors of bootloader, we need them
 	mov ah, 0x02
@@ -22,6 +35,8 @@ _start:
 	mov si, 0
 	mov es, si
 	int 0x13
+
+    
 
 ; load the c part
 mov ah, 0x02
@@ -59,7 +74,6 @@ bits 32
 protected_mode_exec:
 	mov	ax, 0x10
 	mov	ds, ax
-	mov	es, ax
 	mov	es, ax
 	mov	ss, ax
 	mov	fs, ax
@@ -137,6 +151,5 @@ get_memory_map_info:
 	mov ecx, 24
 	int 0x15
 	ret
-
 
 times 2048 - ($ - $$) db 0

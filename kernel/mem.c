@@ -1,6 +1,5 @@
 #include <stdint.h>
-#include "terminal/terminal.h"
-#include "mem.h"
+
 void* memcpy(void* dest, const void* src, unsigned long n) {
     // n = Number of bytes
 
@@ -34,25 +33,25 @@ int strlen(char* ptr) {
 
 //replace with real allocator later but should be fine for now
 //kotofyt: it is not
-extern unsigned char __bss_start;
-extern unsigned char __bss_end;
-static void *heap_ptr;
+extern uint32_t _kernel_end;
+uint32_t placement_address = (uint32_t)&_kernel_end;
 
-static unsigned long mem_max;
-
-
-uint64_t kalloc_get_memory_maps_e820()
+uint32_t kmalloc_int(uint32_t sz, int align, uint32_t *phys)
 {
-	// they should be at 0x8000
+    if (align == 1 && (placement_address & 0xFFFFF000)) // If the address is not already page-aligned
+    {
+        // Align it.
+        placement_address &= 0xFFFFF000;
+        placement_address += 0x1000;
+    }
+    if (phys)
+    {
+        *phys = placement_address;
+    }
+    uint32_t tmp = placement_address;
+    placement_address += sz;
+    return tmp;
 }
-
-void kalloc_init()
-{
-	heap_ptr = (void*)0x200000;
-}
-
-void* kmalloc(unsigned long size) {
-	void *ptr = heap_ptr;
-	heap_ptr+=size;
-	return ptr;
+void* kmalloc(uint32_t size) {
+    return (void*)kmalloc_int(size, 0, 0);
 }

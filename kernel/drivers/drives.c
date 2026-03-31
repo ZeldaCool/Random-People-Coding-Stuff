@@ -1,7 +1,6 @@
 #include "drives.h"
 #include "../mem.h"
 #include "ata.h"
-#include "../terminal/terminal.h"
 #include "../drivers/drives.h"
 #include "../partition/mbr.h"
 
@@ -49,7 +48,7 @@ void register_kdrive(struct kdrive_t *drive)
 struct kdrive_t *get_kdrive( int i )
 {
 	if (drives[i].read == 0)
-		return NULL;
+		return ((void*)0);
 	return &drives[i];
 }
 
