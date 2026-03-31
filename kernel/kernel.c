@@ -13,10 +13,8 @@
 #include "colors.h"         // Added by MorganPG1 to centralise colors into one file
 #include "users/users.h"    // ember2819: user & permission system
 #include "drivers/tables/gdt/gdt.h"
+#include "paging/paging.h" //ember2819
 #include <stdint.h>
-
-#define PSE_BIT 0x00000010
-#define PG_BIT  0x80000000
 
 void process_input(unsigned char *buffer) {
     run_command(buffer, TERM_COLOR);
@@ -40,23 +38,9 @@ void _entry() {
     timer_install();
     timer_phase(50);
 
-    // 4mb pages
-
-    // asm volatile("movl  %%cr4, %%ecx" : : : "cr4", "ecx");
-    // asm volatile("orl   %%ecx, %0" : : "r"(PSE_BIT) : "ecx");
-    // asm volatile("movl  %%ecx, %%cr4" : : : "ecx", "cr4");
-
-    register int cr4 asm("cr4") = cr4 | PSE_BIT;
+    initialise_paging(); //ember2819: identity-maps kernel and enables paging
 
     asm volatile("int $0x3");
-
-    // pg bit for paging
-
-    // asm volatile("movl  %%cr0, %%ecx" : : : "cr0", "ecx");
-    // asm volatile("orl   %%ecx, %0" : : "r"(PG_BIT) : "ecx");
-    // asm volatile("movl  %%ecx, %%cr0" : : : "ecx", "cr0");
-
-    register int cr0 asm("cr0") = cr0 | PG_BIT;
 
     drives_init();
     users_init();
