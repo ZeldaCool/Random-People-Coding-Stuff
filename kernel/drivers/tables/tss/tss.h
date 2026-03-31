@@ -35,5 +35,9 @@ struct tss_entry_struct {
 } __attribute__((packed));
 
 typedef struct tss_entry_struct tss_entry_t;
+typedef struct tss_entry_struct tss_t; 
+
+void tss_write(uint32_t idx, uint16_t ss0, uint32_t esp0); 
+void tss_set_kernel_stack(uint32_t stack);              
 
 #endif
