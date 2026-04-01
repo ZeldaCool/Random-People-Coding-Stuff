@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "paging.h"
-#include "../mem.h" 
+#include "../mem.h"
 #include "../drivers/panic.h"
 
 uint32_t *frames;
@@ -33,7 +33,7 @@ static uint32_t first_frame()
             }
         }
     }
-    return (uint32_t)-1; 
+    return (uint32_t)-1;
 }
 
 void alloc_frame(page_t *page, int is_kernel, int is_writeable)
@@ -71,7 +71,6 @@ page_t *get_page(uint32_t address, int make, page_directory_t *dir)
     if (make) {
         uint32_t tmp;
         dir->tables[table_idx] = (page_table_t *)kmalloc_int(sizeof(page_table_t), 1, &tmp);
-        // Zero the new table
         uint8_t *p = (uint8_t *)dir->tables[table_idx];
         for (uint32_t i = 0; i < sizeof(page_table_t); i++) p[i] = 0;
         dir->tablesPhysical[table_idx] = tmp | 0x7; // PRESENT | RW | USER
@@ -86,60 +85,50 @@ void switch_page_directory(page_directory_t *dir)
     uint32_t phys = dir->physicalAddr;
     asm volatile("mov %0, %%cr3" :: "r"(phys));
 
-    // Enable paging in CR0
     uint32_t cr0;
     asm volatile("mov %%cr0, %0" : "=r"(cr0));
     cr0 |= 0x80000000;
     asm volatile("mov %0, %%cr0" :: "r"(cr0));
 }
 
-//ember2819: page fault handler — prints fault info and halts
 void page_fault(registers_t regs)
 {
     uint32_t fault_addr;
     asm volatile("mov %%cr2, %0" : "=r"(fault_addr));
-
-    // The error code tells us what kind of fault
-    int present  = !(regs.err_code & 0x1); // page not present
-    int rw       =   regs.err_code & 0x2;  // write attempted
-    int us       =   regs.err_code & 0x4;  // user mode
-    int reserved =   regs.err_code & 0x8;  // reserved bits overwritten
-    
-    // We don't have formatted print here so just halt with PANIC
-    (void)present; (void)rw; (void)us; (void)reserved; (void)fault_addr;
+    (void)regs; (void)fault_addr;
     PANIC("Page fault!");
 }
 
-//ember2819
 void initialise_paging()
 {
-    // Assume 16 MB of physical RAM for now
-    uint32_t mem_end_page = 0x1000000;
+    uint32_t mem_end_page = 0x1000000; // 16 MB
     nframes = mem_end_page / 0x1000;
 
-    // Allocate the frames bitset (one bit per frame)
+    // Allocate + zero the frame bitset
     frames = (uint32_t *)kmalloc(INDEX_FROM_BIT(nframes) * sizeof(uint32_t));
     uint8_t *fp = (uint8_t *)frames;
     for (uint32_t i = 0; i < INDEX_FROM_BIT(nframes) * sizeof(uint32_t); i++) fp[i] = 0;
 
-    // Allocate a page directory
+    // Allocate + zero the kernel page directory
     uint32_t phys;
     kernel_directory = (page_directory_t *)kmalloc_int(sizeof(page_directory_t), 1, &phys);
     uint8_t *dp = (uint8_t *)kernel_directory;
     for (uint32_t i = 0; i < sizeof(page_directory_t); i++) dp[i] = 0;
     kernel_directory->physicalAddr = phys;
 
-    // Identity-map everything from 0 up to placement_address so the kernel
-    // can keep running at the same addresses after paging is enabled
-    uint32_t i = 0;
-    while (i < placement_address + 0x1000) {
-        alloc_frame(get_page(i, 1, kernel_directory), 1, 0); // kernel, read-only
-        i += 0x1000;
-    }
+    // Snapshot placement_address AFTER the setup allocations above.
+    // get_page(make=1) calls kmalloc_int internally during the mapping loop,
+    // allocating page tables — if we check placement_address live those
+    // allocations can fall outside the mapped region and triple-fault.
+    // Padding 1MB gives room for all page tables the loop will create.
+    //ember2819
+    uint32_t map_end = placement_address + 0x100000;
 
-    // Register the page fault handler (ISR 14)
-    // (isr_register is declared in isr.h — call it if your IRQ system supports it)
-    // isr_register(14, page_fault);  // uncomment once syscall/ISR dispatch is wired
+    // Identity-map 0 → map_end so the kernel keeps running at the same
+    // physical addresses after the PG bit is set
+    for (uint32_t i = 0; i < map_end; i += 0x1000) {
+        alloc_frame(get_page(i, 1, kernel_directory), 1, 0);
+    }
 
     switch_page_directory(kernel_directory);
 }
