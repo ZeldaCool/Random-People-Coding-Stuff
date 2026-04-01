@@ -1,4 +1,4 @@
-/* By Ember2819, your welcome dorito girl. Took me way too long to figure out how to make this... */
+/* By Ember2819 */
 
 ENTRY(_entry)
 
@@ -8,18 +8,17 @@ SECTIONS
 
     _kernel_start = .;
 
-    .text ALIGN (4K) : AT (ADDR (.text) - 0xC0000000) {
+    .text ALIGN(4K) : {
         *(.text.entry)
-        *(.*text*)
+        *(.text*)
     }
-    
-    .rodata ALIGN (4K) : AT (ADDR (.rodata) - 0xC0000000) { *(.rodata) }
-    .data ALIGN (4K) : AT (ADDR (.data) - 0xC0000000) { *(.data)   }
-    .bss ALIGN (4K) : AT (ADDR (.bss) - 0xC0000000) {
-        *(.bss)
+
+    .rodata ALIGN(4K) : { *(.rodata*) }
+    .data   ALIGN(4K) : { *(.data*)   }
+    .bss    ALIGN(4K) : {
+        *(.bss*)
         *(COMMON)
-        *(.bootstrap_stack)
     }
-    
+
     _kernel_end = .;
 }
