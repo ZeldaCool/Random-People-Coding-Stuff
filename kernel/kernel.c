@@ -40,7 +40,6 @@ void _entry() {
 
     initialise_paging(); //ember2819: identity-maps kernel and enables paging
 
-    asm volatile("int $0x3");
 
     drives_init();
     users_init();
