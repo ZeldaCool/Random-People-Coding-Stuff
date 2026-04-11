@@ -38,6 +38,7 @@ void _entry() {
     irq_install();
     printc("Enabling Timer and setting it to 50Hz...\n", VGA_COLOR_LIGHT_GREY);
     timer_install();
+    keyboard_install();
     timer_phase(50);
     printc("Testing interruption...\n", VGA_COLOR_LIGHT_GREY);
     asm volatile("int $0x3");

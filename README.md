@@ -99,3 +99,4 @@ Also, you can join the community slack [here](https://join.slack.com/t/communtiy
 - TheOtterMonarch
 - codecrafter01001
 - Pumpkicks or flixytss
+- DarkThemeGeek
