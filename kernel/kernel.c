@@ -32,17 +32,11 @@ void _entry() {
     // Setup keyboard layouts
     set_layout(LAYOUTS[0]);
 
-    printc("Enabling IDT...\n", VGA_COLOR_LIGHT_GREY);
     init_idt();
-    printc("Enabling IRQ...\n", VGA_COLOR_LIGHT_GREY);
     irq_install();
-    printc("Enabling Timer and setting it to 50Hz...\n", VGA_COLOR_LIGHT_GREY);
     timer_install();
     keyboard_install();
     timer_phase(50);
-    printc("Testing interruption...\n", VGA_COLOR_LIGHT_GREY);
-    asm volatile("int $0x3");
-    printc("Test completed!\n", VGA_COLOR_LIGHT_GREY);
 
     drives_init();
 
