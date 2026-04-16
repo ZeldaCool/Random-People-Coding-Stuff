@@ -4,6 +4,7 @@
 #include "../mem.h"
 #include "../partition/partition.h"
 
+struct kdrive_t;
 
 typedef ssize_t (*kdrive_read_sectors)(struct kdrive_t *drive, size_t lba, size_t count, uint8_t *buf);
 typedef ssize_t (*kdrive_write_sectors)(struct kdrive_t *drive, size_t lba, size_t count, const uint8_t *buf);

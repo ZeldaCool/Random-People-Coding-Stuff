@@ -35,7 +35,7 @@ int strlen(char *ptr) {
         i++;
     return i;
 }
-
+ 
 // replace with real allocator later but should be fine for now
 // kotofyt: it is not
 extern unsigned char __bss_start;
@@ -52,6 +52,8 @@ static unsigned long mem_max;
 
 uint64_t kalloc_get_memory_maps_e820() {
     // they should be at 0x8000
+    // todo: implement this
+    return -1;
 }
 
 void kalloc_init() {

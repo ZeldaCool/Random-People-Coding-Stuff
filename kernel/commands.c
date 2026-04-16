@@ -141,6 +141,8 @@ static void cmd_contributors(uint8_t color) {
     printc("TheOtterMonarch\n", color);
     printc("codecrafter01001\n", color);
     printc("Pumpkicks\n", color);
+    printc("DarkThemeGeek\n", color);
+    printc("nfoxers\n", color);
 }
 
 static void cmd_setkeyswe(uint8_t color) {

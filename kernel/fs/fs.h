@@ -7,6 +7,11 @@
 #include "stdint.h"
 #define FILENAME_MAX 256
 
+// nfoxers - forward declaration to fix -Wvisibility
+struct drive_file_t;
+struct drive_fs_t;
+struct drive_dir_t;
+
 typedef size_t (*fn_df_read)(struct drive_file_t *, size_t offset, size_t count, uint8_t *data);
 typedef size_t (*fn_df_write)(struct drive_file_t *, size_t offset, size_t count, const uint8_t *data);
 typedef size_t (*fn_df_truncate)(struct drive_file_t *, size_t size, const uint8_t *data);

@@ -124,6 +124,8 @@ int map_page(void *physical_address, void *virtual_address)
     pt_entry_t *page = &table->entries[PT_INDEX((uint32_t)virtual_address)];
 
     // Map in page
+
+    return 0;
 }
 
 // Unmap a page

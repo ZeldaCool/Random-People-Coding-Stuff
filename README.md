@@ -112,3 +112,4 @@ sudo pacman -S base-devel binutils nasm clang qemu-system-x86 ccache
 - codecrafter01001
 - Pumpkicks or flixytss
 - DarkThemeGeek
+- nfoxers
