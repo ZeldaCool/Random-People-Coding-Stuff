@@ -1,4 +1,4 @@
-# The Community OS
+# Gecko OS
 
 A community-built bare-metal operating system for x86 machines, written entirely from scratch.
 
@@ -43,7 +43,6 @@ A collaborative OS project where contributors build a custom operating system fr
 ## How to Contribute
 
 Submit ideas or feedback:
-- Name and logo suggestions: [Google Forms](https://forms.gle/33wz1AsVEKife6pB8)
 - General feedback: [Google Forms](https://forms.gle/3aL4FJqvc8MZaJJv5)
 
 Ways to contribute:
@@ -81,7 +80,12 @@ sudo pacman -S base-devel binutils nasm clang qemu-system-x86 ccache
 ## Contact
 
 - Email: elroylilly@gmail.com
-- Join the community: [Slack](https://join.slack.com/t/communtiyos/shared_invite/zt-3t3iltj77-5JTo~dkpCm44tZcyA0Or_w)
+- [Mastodon](https://mastodon.social/@GeckoOS)
+- Join the community:
+  - [Slack](https://join.slack.com/t/communtiyos/shared_invite/zt-3t3iltj77-5JTo~dkpCm44tZcyA0Or_w)
+  - [Matrix](https://matrix.to/#/#geckoos-official:matrix.org)
+  - [Stoat](https://stt.gg/Cv2wabFH)
+  - [Fluxer](https://fluxer.gg/6K7A79x1)
 
 ## Screenshots
 
