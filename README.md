@@ -1,92 +1,100 @@
 # The Community OS
-## Vision:
-We want to have a ton of random people come together and make their own individual contributions to a barebones operating system. Our goal is to have an OS that is fully custom built from scratch that can boot on an x86 machine. Any contributions or advice is greatly appreciated! 
 
-## How to Contribute:
-There are several ways you can contribute:
-- Give us ideas for the name and logo [here](https://forms.gle/33wz1AsVEKife6pB8)
-- Give us feedback [here](https://forms.gle/3aL4FJqvc8MZaJJv5)
-- Fix a typo or add better wording
-- Improve documentation
-- Add a new feature
-- Improve or optimize code
-- Clean up code
-- Format code and comments
-- Tell others about the project
+A community-built bare-metal operating system for x86 machines, written entirely from scratch.
 
-You can apply your contributions to the main project in two ways:
-- https://codeshare.io/aybXqo
-- Fork the repo, make a change, and submit a PR
+## Vision
 
-If you contribute at all in any way to the project, please add your name to the list in the README or main.c file. I highly recommend using Github to make changes as codeshare is difficult to work on multiple files and is very disorganized at the moment. I would like to make codeshare more of a note and planning page as well as a place to gather names rather than a place where we are actually working on code to improve effeciency.
+A collaborative OS project where contributors build a custom operating system from the ground up. Any contributions or feedback are welcome!
 
-## TO-DO
-- Create a command system
-- Implement shell
-- Implement shell navigation via arrow keys
-- Remove Profanity
+## Features
 
-## Needed Jobs
-- Dedicated tester: Must have a Linux machine or Linux VM running x86 to build the lastest version of the OS and distribute it on the website.
+- **Bootloader** - Custom x86 bootloader
+- **Kernel** - Full kernel implementation with:
+  - VGA text mode driver
+  - AT keyboard driver with multiple layouts
+  - ATA disk driver
+  - Programmable timer
+  - Interrupt handling (IDT, ISR, IRQ)
+- **Memory Management**
+  - Physical memory management
+  - Virtual memory with paging
+- **File System** - FAT16 support
+- **Partition Support** - MBR partitioning
+- **Shell** - Interactive command-line shell
+- **Text Editor** - Built-in terminal editor
+- **Custom Language** - GK interpreted language
 
 ## Roadmap
-- Dynamic Memory Management
-- Shell
-   - With a basic command system
-- Storage management/Filesystem
-- Internet Access
-- Package Manager
-- First Official Release
 
-# How do I compile and run this project?
+- [x] Dynamic Memory Management
+- [x] Shell with basic command system
+- [x] Storage management/Filesystem
+- [ ] Internet Access
+- [ ] Package Manager
+- [ ] First Official Release
 
-**NOTE: THESE INSTRUCTIONS ARE TARGETING LINUX BASED SYSTEMS, IF YOU DON'T USE LINUX THEN INSTALL LINUX ON A VIRTUAL MACHINE TO FOLLOW THESE**
+## TODO
 
-### Step 1 - Install required build tools
-For Debian/Ubuntu and derivatives
-`sudo apt install build-essential binutils nasm clang qemu-system-x86`
+- [ ] Add more shell commands
+- [ ] Implement additional file operations
+- [ ] Add user account system improvements
+- [ ] Expand GK language features
 
-For Arch and derivatives
-`sudo pacman -S base-devel binutils nasm clang qemu-system-x86 ccache`
+## How to Contribute
 
-This installs:
- - NASM (for assembling the bootloader)
- - LD (the GNU linker for linking the code into one image)
- - Clang (for compiling the C code)
- - GCC (backup compiler, same use as Clang)
- - Make (for automating all the commands needed)
- - QEMU (emulator, for testing the OS)
+Submit ideas or feedback:
+- Name and logo suggestions: [Google Forms](https://forms.gle/33wz1AsVEKife6pB8)
+- General feedback: [Google Forms](https://forms.gle/3aL4FJqvc8MZaJJv5)
 
-If you are not using an Ubuntu based distro then use any equivalent command for your distro's package manager, these tools should be easily available for all distros.
+Ways to contribute:
+- Fix typos or improve wording
+- Add new features
+- Improve or optimize code
+- Clean up code
+- Tell others about the project
 
-### Step 2 - Building the OS
-This process will work on any Linux distro as long as you have the previously stated dependencies installed
+Apply contributions via:
+- Fork the repo, make changes, and submit a PR
 
-There are 2 commands you can use for this:
+Add your name to the contributors list when you contribute!
 
-`make all` - This produces an os.img file
+## Building
 
-`make run` - This produces an os.img file (like the make all command) but it also runs the img file in qemu so you can test it out.
-Note: When it asks what drive to boot from, press "1".
+### Prerequisites (Linux)
 
-# Other details
+**Debian/Ubuntu:**
+```bash
+sudo apt install build-essential binutils nasm clang qemu-system-x86
+```
+
+**Arch:**
+```bash
+sudo pacman -S base-devel binutils nasm clang qemu-system-x86 ccache
+```
+
+### Build Commands
+
+- `make all` - Produces `os.img`
+- `make run` - Builds and runs in QEMU
+  - When prompted for boot drive, press "1"
 
 ## Contact
-elroylilly@gmail.com for any questions
 
-Also, you can join the community slack [here](https://join.slack.com/t/communtiyos/shared_invite/zt-3t3iltj77-5JTo~dkpCm44tZcyA0Or_w)
-## Pictures
+- Email: elroylilly@gmail.com
+- Join the community: [Slack](https://join.slack.com/t/communtiyos/shared_invite/zt-3t3iltj77-5JTo~dkpCm44tZcyA0Or_w)
+
+## Screenshots
 
 ![2026-03-22 20-42-07](https://github.com/user-attachments/assets/4af57872-342f-45e0-9eb0-31b1033c9d54)
 
+## Contributors
 
-## Contributors: 
 - **Ember2819** (Founder & Manager)
 - Sifi11 (Founder)
 - Crim (OG)
-- CheeseFunnel23 (was cooking RIP)
-- **bonk enjoyer/dorito girl** (Bootloader Creator) **ABSOLUTE LEGEND**
-- KaleidoscopeOld5841 (Uses Arch BTW)
+- CheeseFunnel23
+- **bonk enjoyer/dorito girl** (Bootloader Creator)
+- KaleidoscopeOld5841
 - billythemoon (V1 Website creator)
 - TheGirl790 (OG)
 - kotofyt
