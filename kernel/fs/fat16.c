@@ -649,7 +649,7 @@ struct drive_fs_t *fat16_drive_open( struct kdrive_t *drive, struct partition_t 
 
 struct drive_fs_t *fat16_drive_close( struct drive_fs_t *fs )
 {
-
+	return NULL;
 }
 
 int fat16_delete_file(struct drive_fs_t *fs, char *name) {
